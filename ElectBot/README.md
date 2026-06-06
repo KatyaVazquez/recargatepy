@@ -45,6 +45,6 @@ Plataforma multi-tenant de inteligencia electoral en tiempo real para internas d
 ├── pdfs/                 # documentos de flujo (PDF)
 ```
 
-## Datos del padrón
+## Datos del padrónn
 
 Los DBFs originales (`ANR2026/`) **NO se versionan** — contienen datos personales de 2.8M ciudadanos. Se procesan localmente con `scripts/migrate_padron.py` y se cargan a Supabase vía COPY.
