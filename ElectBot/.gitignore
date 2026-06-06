@@ -1,0 +1,47 @@
+# Padrón electoral — datos sensibles, NO subir
+ANR2026/
+*.dbf
+*.cdx
+*.fpt
+*.DBF
+*.CDX
+*.FPT
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+build/
+/coverage
+*.log
+npm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+*.pem
+
+# Env
+.env
+.env.local
+.env*.local
+
+# Python (scripts auxiliares)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Supabase
+supabase/.branches
+supabase/.temp

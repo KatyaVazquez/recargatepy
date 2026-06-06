@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Flujo Global del Sistema — ElectBot</title>
+<style>
+  :root{
+    --azul:#1e3a5f; --azul-claro:#2d6cdf; --gris:#5b6470; --gris-claro:#f4f6f9;
+    --borde:#e1e6ed; --verde:#1b8a5a; --naranja:#c47b00; --rojo:#c0392b; --texto:#1f2933;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--texto);line-height:1.55;background:#fff;font-size:15px;}
+  .pagina{max-width:880px;margin:0 auto;padding:48px 40px 60px;}
+  header.doc{border-bottom:3px solid var(--azul);padding-bottom:22px;margin-bottom:32px;}
+  header.doc .eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:12px;color:var(--azul-claro);font-weight:700;margin-bottom:8px;}
+  header.doc h1{font-size:28px;color:var(--azul);font-weight:800;line-height:1.2;}
+  header.doc .meta{margin-top:12px;font-size:13px;color:var(--gris);}
+  header.doc .meta span{margin-right:18px;}
+  h2{font-size:19px;color:var(--azul);margin:38px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--borde);}
+  h3{font-size:15.5px;color:var(--azul);margin:22px 0 8px;}
+  p{margin-bottom:12px;}
+  .lead{font-size:15px;color:var(--gris);margin-bottom:8px;}
+  ul,ol{margin:8px 0 14px 22px;}
+  li{margin-bottom:6px;}
+  strong{color:var(--texto);}
+  code{background:var(--gris-claro);padding:1px 6px;border-radius:5px;font-size:13px;font-family:ui-monospace,Menlo,monospace;color:var(--azul);}
+  .roles{display:flex;gap:14px;margin:20px 0;flex-wrap:wrap;}
+  .rol{flex:1;min-width:160px;border:1px solid var(--borde);border-radius:10px;padding:16px;background:var(--gris-claro);}
+  .rol .nombre{font-size:14px;font-weight:800;color:var(--azul-claro);text-transform:uppercase;letter-spacing:.5px;}
+  .rol .quien{font-size:12px;color:var(--gris);margin:4px 0 8px;}
+  .rol .hace{font-size:13px;}
+  .flujo{border-left:3px solid var(--azul-claro);padding:4px 0 4px 0;margin:18px 0;}
+  .paso{display:flex;gap:14px;padding:12px 16px;margin-left:-2px;border-left:3px solid transparent;}
+  .paso .num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .paso .cont{flex:1;}
+  .paso .titulo{font-weight:700;color:var(--azul);margin-bottom:3px;}
+  .paso .det{font-size:13.5px;color:var(--texto);}
+  .nota{background:#eef5ff;border-left:4px solid var(--azul-claro);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;}
+  .ok{background:#eafaf1;border-left:4px solid var(--verde);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;}
+  .ok strong{color:var(--verde);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+  thead th{background:var(--azul);color:#fff;text-align:left;padding:10px 12px;font-weight:600;font-size:13px;}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--borde);vertical-align:top;}
+  tbody tr:nth-child(even){background:var(--gris-claro);}
+  .arch{background:#1e293b;color:#e2e8f0;border-radius:10px;padding:20px 22px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.7;margin:18px 0;white-space:pre;overflow-x:auto;}
+  .footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--borde);font-size:12px;color:var(--gris);text-align:center;}
+  @media print{.pagina{padding:0;max-width:100%;}.paso{break-inside:avoid;}.rol{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="pagina">
+<header class="doc">
+  <div class="eyebrow">ElectBot · Documento interno</div>
+  <h1>Flujo Global del Sistema</h1>
+  <div class="meta">
+    <span><strong>Propósito:</strong> confirmar arquitectura y flujo antes de codear</span>
+    <span><strong>Audiencia:</strong> equipo de desarrollo</span>
+  </div>
+</header>
+
+<p class="lead">Plataforma de inteligencia electoral en tiempo real para internas del partido.
+Una sola aplicación que sirve a múltiples municipios (clientes), cada uno con su bot de Telegram,
+su panel de administración y su tablero en vivo. Este documento describe quién hace qué, de punta a punta.</p>
+
+<h2>1. Concepto central: un sistema, muchos municipios</h2>
+<p>El padrón nacional completo (2,8 millones de electores) se carga <strong>una sola vez</strong> y
+es compartido. Cada municipio que contrata el servicio es un <strong>"tenant"</strong> (inquilino):
+opera de forma totalmente aislada de los demás, pero todos consultan el mismo padrón.</p>
+
+<div class="arch">PADRÓN NACIONAL (compartido, solo lectura)
+  2.804.503 electores · 266 municipios · 411 secciones · 506 locales
+        │
+        ▼
+CADA MUNICIPIO (tenant) — aislado del resto
+  ├─ su bot de Telegram
+  ├─ sus operadores (Mesa Guía + Veedores)
+  ├─ sus jornadas electorales
+  └─ su tablero en vivo</div>
+
+<h2>2. Los cinco roles</h2>
+<div class="roles">
+  <div class="rol">
+    <div class="nombre">Equipo interno</div>
+    <div class="quien">Soporte / administración del sistema</div>
+    <div class="hace">Crea los municipios (clientes), genera la cuenta del admin de cada uno y administra la plataforma.</div>
+  </div>
+  <div class="rol">
+    <div class="nombre">Admin</div>
+    <div class="quien">El responsable de cada municipio</div>
+    <div class="hace">Configura su bot, carga a sus operadores, crea las jornadas, vigila alertas.</div>
+  </div>
+  <div class="rol">
+    <div class="nombre">Mesa Guía</div>
+    <div class="quien">Operador en el local</div>
+    <div class="hace">Escribe un CI en Telegram y recibe local, mesa y orden del elector.</div>
+  </div>
+</div>
+<div class="roles">
+  <div class="rol">
+    <div class="nombre">Veedor</div>
+    <div class="quien">Operador en la mesa de votación</div>
+    <div class="hace">Escribe un CI para marcar que esa persona ya votó.</div>
+  </div>
+  <div class="rol">
+    <div class="nombre">Candidato</div>
+    <div class="quien">El cliente final</div>
+    <div class="hace">Solo mira el tablero en vivo: participación, rankings, alertas.</div>
+  </div>
+</div>
+
+<h2>3. Flujo de creación de tenant (equipo interno)</h2>
+<p>Lo que hacemos nosotros cada vez que entra un cliente nuevo. Toma unos minutos.</p>
+<div class="flujo">
+  <div class="paso"><div class="num">1</div><div class="cont">
+    <div class="titulo">Crear el municipio (tenant)</div>
+    <div class="det">En el panel de administración, "Nuevo cliente": nombre (ej. <em>Comité ANR Luque</em>),
+    y se selecciona el municipio de una lista desplegable (departamento → distrito). El sistema ya conoce
+    todos los municipios del país porque el padrón está cargado.</div>
+  </div></div>
+  <div class="paso"><div class="num">2</div><div class="cont">
+    <div class="titulo">Generar la cuenta del admin del cliente</div>
+    <div class="det">Definimos el email y la contraseña del responsable del municipio y se las
+    pasamos directamente (WhatsApp o en persona). Sin correos de invitación: entra y usa.</div>
+  </div></div>
+  <div class="paso"><div class="num">3</div><div class="cont">
+    <div class="titulo">Configurar el bot (lo hacemos nosotros)</div>
+    <div class="det">Pegamos el token del bot al crear el tenant y el sistema configura todo solo.
+    El cliente recibe el bot listo para usar. Si más adelante quiere su propia marca, puede
+    cambiarlo desde su panel.</div>
+  </div></div>
+</div>
+<div class="ok"><strong>Resultado:</strong> el municipio queda creado, con su bot listo y una
+<strong>"Jornada principal" auto-creada y activa</strong> (todas las seccionales). Aislado del resto:
+solo ve y opera electores de ese distrito. El admin puede empezar a cargar operadores de inmediato.</div>
+
+<h2>4. ¿Y las localidades / seccionales? ¿Se pueden editar?</h2>
+<p><strong>Sí, y es muy fácil — esta es la parte flexible del sistema.</strong> Hay que distinguir dos cosas:</p>
+<table>
+  <thead><tr><th>Concepto</th><th>Qué es</th><th>¿Se edita?</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Municipio del tenant</strong></td>
+      <td>El distrito que cubre el cliente (ej. Luque). Se fija al crear el tenant.</td>
+      <td>Es fijo. Un tenant = un municipio. (Si un cliente cubriera dos municipios, se crean dos tenants.)</td>
+    </tr>
+    <tr>
+      <td><strong>Secciones de la jornada</strong></td>
+      <td>Qué seccionales del municipio participan en una elección puntual.</td>
+      <td><strong>100% editable</strong>, en cualquier momento, desde el panel del admin. Sumar o sacar seccionales es marcar/desmarcar casillas.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="nota"><strong>Ejemplo concreto:</strong> el municipio de Luque tiene 4 seccionales. El admin crea
+una jornada e incluye solo las seccionales 1 y 3. Más tarde decide sumar la 2: entra a la jornada,
+marca la seccional 2, guarda. Listo — ahora los electores de la seccional 2 también cuentan.
+Un municipio con una sola seccional (la mayoría del país) ni siquiera tiene que elegir: opera todo.</div>
+
+<h2>5. La jornada: el corazón flexible (y sin fricción)</h2>
+<p>Una <strong>jornada</strong> es una elección concreta (ej. "Interna municipal 25 de mayo"). El estado
+de cada elector (no votó / consultado / votó) se guarda <strong>por jornada</strong>: así el mismo padrón
+se reutiliza en cada elección sin "ensuciarse" — cada jornada arranca limpia.</p>
+<div class="ok"><strong>No es un paso obligatorio.</strong> Al crear el municipio se auto-crea una
+"Jornada principal" ya activa, con todas las seccionales. El caso común (un municipio, una elección)
+no requiere tocar nada. El admin solo entra a la jornada si quiere filtrar seccionales o correr una
+segunda elección más adelante.</div>
+<p>Cada jornada define: qué seccionales participan (editable cuando quieran), la fecha, y su estado
+(activa / cerrada).</p>
+
+<h2>6. Resumen del ciclo de vida</h2>
+<div class="arch">NOSOTROS                 CLIENTE (admin)            OPERADORES           CANDIDATO
+─────────                ───────────────            ──────────           ─────────
+Crear municipio          Iniciar sesión
++ cuenta admin           Cargar operadores  ──────► Hacen /start
++ bot configurado  ────► (opcional: ajustar         Comparten su número
++ jornada activa          seccionales o bot)         Quedan habilitados
+                                                          │
+                                                          ▼
+                                                   Escriben CIs  ──────►  Ve el tablero
+                                                   (consultar/votar)       en vivo (30s)</div>
+
+<div class="footer">ElectBot — Documento de confirmación de flujo · La intención es validar este flujo antes de escribir código.</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de Uso para el Cliente — ElectBot</title>
+<style>
+  :root{
+    --azul:#1e3a5f; --azul-claro:#2d6cdf; --gris:#5b6470; --gris-claro:#f4f6f9;
+    --borde:#e1e6ed; --verde:#1b8a5a; --naranja:#c47b00; --rojo:#c0392b; --texto:#1f2933;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--texto);line-height:1.55;background:#fff;font-size:15px;}
+  .pagina{max-width:880px;margin:0 auto;padding:48px 40px 60px;}
+  header.doc{border-bottom:3px solid var(--azul);padding-bottom:22px;margin-bottom:32px;}
+  header.doc .eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:12px;color:var(--azul-claro);font-weight:700;margin-bottom:8px;}
+  header.doc h1{font-size:28px;color:var(--azul);font-weight:800;line-height:1.2;}
+  header.doc .meta{margin-top:12px;font-size:13px;color:var(--gris);}
+  h2{font-size:19px;color:var(--azul);margin:38px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--borde);}
+  h3{font-size:15.5px;color:var(--azul);margin:22px 0 8px;}
+  p{margin-bottom:12px;}
+  .lead{font-size:15px;color:var(--gris);margin-bottom:8px;}
+  ul,ol{margin:8px 0 14px 22px;}
+  li{margin-bottom:6px;}
+  strong{color:var(--texto);}
+  code{background:var(--gris-claro);padding:1px 6px;border-radius:5px;font-size:13px;font-family:ui-monospace,Menlo,monospace;color:var(--azul);}
+  .paso{display:flex;gap:14px;padding:12px 16px;margin:6px 0;}
+  .paso .num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .paso .cont{flex:1;}
+  .paso .titulo{font-weight:700;color:var(--azul);margin-bottom:3px;}
+  .paso .det{font-size:13.5px;}
+  .nota{background:#eef5ff;border-left:4px solid var(--azul-claro);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;}
+  .ok{background:#eafaf1;border-left:4px solid var(--verde);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;}
+  .ok strong{color:var(--verde);}
+  .warn{background:#fff8e6;border-left:4px solid var(--naranja);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;}
+  .warn strong{color:var(--naranja);}
+  .chat{background:var(--gris-claro);border:1px solid var(--borde);border-radius:12px;padding:16px 18px;margin:14px 0;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;}
+  .chat .yo{color:var(--azul-claro);font-weight:700;}
+  .chat .bot{color:var(--texto);}
+  .chat .sep{color:var(--gris);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+  thead th{background:var(--azul);color:#fff;text-align:left;padding:10px 12px;font-weight:600;font-size:13px;}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--borde);vertical-align:top;}
+  tbody tr:nth-child(even){background:var(--gris-claro);}
+  .alertas{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap;}
+  .al{flex:1;min-width:130px;border-radius:8px;padding:12px;font-size:12.5px;color:#fff;}
+  .al .t{font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.5px;margin-bottom:4px;}
+  .al.am{background:#d4a017;} .al.na{background:#d35400;} .al.ro{background:#c0392b;} .al.cr{background:#7d1f1f;}
+  .footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--borde);font-size:12px;color:var(--gris);text-align:center;}
+  @media print{.pagina{padding:0;max-width:100%;}.paso{break-inside:avoid;}.chat{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="pagina">
+<header class="doc">
+  <div class="eyebrow">ElectBot · Guía de uso</div>
+  <h1>Cómo funciona el sistema, paso a paso</h1>
+  <div class="meta"><strong>Para:</strong> el responsable (admin) de cada municipio y su equipo</div>
+</header>
+
+<p class="lead">El sistema le permite, el día de la elección, saber en tiempo real quién consultó,
+quién ya votó y qué participación tiene cada mesa — todo desde Telegram, sin instalar nada.
+Esta guía explica qué tiene que hacer usted como responsable, qué hacen sus operadores, y
+cómo se ve la operación de principio a fin.</p>
+
+<h2>Parte 1 · Lo que usted (el admin) prepara antes</h2>
+
+<div class="paso"><div class="num">1</div><div class="cont">
+  <div class="titulo">Entrar a su panel</div>
+  <div class="det">Le entregamos su usuario y contraseña directamente. Entra a su panel de
+  administración: es una página web, funciona en computadora o celular. Su bot ya viene
+  configurado y listo — no tiene que hacer nada técnico.</div>
+</div></div>
+
+<div class="paso"><div class="num">2</div><div class="cont">
+  <div class="titulo">Cargar a sus operadores</div>
+  <div class="det">En la sección "Operadores" agrega a su equipo: nombre, número de teléfono, rol
+  (Mesa Guía o Veedor) y a qué local/mesa pertenece. Puede cargarlos uno por uno o todos juntos
+  con una planilla. <strong>No hay que aprobar a nadie después:</strong> al cargarlos ya quedan habilitados.</div>
+</div></div>
+
+<div class="paso"><div class="num">3</div><div class="cont">
+  <div class="titulo">(Opcional) Ajustar la jornada</div>
+  <div class="det">Su jornada electoral ya viene creada y activa, con todas las seccionales del
+  municipio. Solo entra acá si quiere que participen únicamente algunas seccionales: marcar o
+  desmarcar casillas. <strong>Se puede editar cuando quiera.</strong></div>
+</div></div>
+
+<div class="ok"><strong>Con cargar a los operadores ya está listo.</strong> El sistema queda
+esperando a que entren y empiecen a trabajar. El bot y la jornada ya vienen configurados.</div>
+
+<h2>Parte 2 · Lo que hacen sus operadores</h2>
+
+<h3>Cómo se conectan (una sola vez)</h3>
+<p>Usted les pasa el enlace del bot por WhatsApp. Cada operador:</p>
+<div class="chat">
+  <span class="yo">Operador:</span> <span class="bot">abre el bot y toca "Iniciar"</span><br>
+  <span class="bot">Bot: Hola 👋 Tocá el botón para compartir tu número.</span><br>
+  <span class="yo">Operador:</span> <span class="bot">toca "📱 Compartir mi número"</span><br>
+  <span class="bot">Bot: ¡Bienvenido, Juan! Sos Mesa Guía del Local Escuela N°3.</span>
+</div>
+<p>El botón comparte <strong>el número propio del operador</strong> (el de su cuenta de Telegram) con
+un solo toque — no abre la lista de contactos ni hay que buscarse a uno mismo. Si ese número está en
+la lista que usted cargó, queda habilitado al instante. Si no, el bot le avisa que no está autorizado.
+Así nadie ajeno puede usar el sistema.</p>
+
+<h3>Mesa Guía — orienta al votante</h3>
+<p>Escribe el número de cédula y el bot le devuelve dónde tiene que votar esa persona:</p>
+<div class="chat">
+  <span class="yo">Mesa Guía:</span> <span class="bot">1234567</span><br>
+  <span class="bot">Bot:</span><br>
+  <span class="bot">✅ NO VOTÓ AÚN</span><br>
+  <span class="bot">Pérez, Juan</span><br>
+  <span class="bot">Local: Escuela N°3 · Mesa: 12 · Orden: 45</span>
+</div>
+
+<h3>Veedor — marca el voto</h3>
+<p>Cuando la persona vota, el veedor escribe la cédula y el sistema lo registra:</p>
+<div class="chat">
+  <span class="yo">Veedor:</span> <span class="bot">1234567</span><br>
+  <span class="bot">Bot:</span><br>
+  <span class="bot">🗳️ VOTO REGISTRADO</span><br>
+  <span class="bot">Pérez, Juan · Mesa 12</span><br>
+  <span class="bot">Si fue error: escribí CORREGIR 1234567 (hasta 7 minutos)</span>
+</div>
+<p>Si el veedor se equivocó, tiene 7 minutos para corregir escribiendo <code>CORREGIR</code> y la cédula.</p>
+
+<h2>Parte 3 · Las alertas automáticas</h2>
+<p>El sistema detecta situaciones sospechosas y avisa al instante:</p>
+<div class="alertas">
+  <div class="al am"><div class="t">Amarilla</div>El elector ya consultó antes en este mismo puesto.</div>
+  <div class="al na"><div class="t">Naranja</div>El elector consultó en otro puesto o local distinto.</div>
+  <div class="al ro"><div class="t">Roja</div>Intentan consultar a alguien que YA votó.</div>
+  <div class="al cr"><div class="t">Crítica</div>Un veedor marcó a alguien que no es de su mesa.</div>
+</div>
+<p>Usted ve todas estas alertas en su panel, en vivo, ordenadas por gravedad.</p>
+
+<h2>Parte 4 · El día de la elección, de principio a fin</h2>
+<table>
+  <thead><tr><th>Momento</th><th>Qué pasa</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Días antes</strong></td><td>Usted carga operadores (y si quiere, ajusta las seccionales). Sus operadores hacen la prueba de conexión con el bot.</td></tr>
+    <tr><td><strong>Apertura</strong></td><td>Los operadores ya pueden trabajar (la jornada ya está activa).</td></tr>
+    <tr><td><strong>Durante el día</strong></td><td>Mesa Guía orienta votantes; Veedores marcan votos. Todo queda registrado automáticamente.</td></tr>
+    <tr><td><strong>En vivo</strong></td><td>El candidato y usted ven el tablero: participación total, por mesa, rankings de operadores y alertas. Se actualiza solo cada 30 segundos.</td></tr>
+    <tr><td><strong>Cierre</strong></td><td>Cierra la jornada. Los datos quedan guardados y se pueden exportar.</td></tr>
+  </tbody>
+</table>
+
+<h2>Parte 5 · El tablero del candidato</h2>
+<p>El candidato recibe un enlace privado a un tablero en vivo donde ve, sin números de cédula
+ni datos personales:</p>
+<ul>
+  <li>Participación total y porcentaje de votación.</li>
+  <li>Mesas con mayor y menor participación (dónde hay que movilizar).</li>
+  <li>Ranking de operadores más activos.</li>
+  <li>Alertas del día.</li>
+</ul>
+
+<div class="warn"><strong>Importante sobre la privacidad:</strong> cada rol ve solo lo que necesita.
+Los operadores no ven la base completa ni teléfonos. El candidato ve solo totales, nunca personas
+individuales. Todo lo que se hace queda registrado para auditoría.</div>
+
+<h2>Y si Telegram se cae…</h2>
+<p>El sistema tiene un canal de respaldo: una página web (PWA) que cada operador guarda en su
+celular. Si Telegram falla, usted cambia el canal desde su panel y los operadores siguen trabajando
+desde la web, con el mismo número de cédula y las mismas respuestas. La operación no se detiene.</p>
+
+<div class="footer">ElectBot — Guía de uso para el cliente · Documento de confirmación de flujo.</div>
+</div>
+</body>
+</html>
